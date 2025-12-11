@@ -9,9 +9,11 @@ import donpedromz.integracion_prolog.entities.Patient;
 import donpedromz.integracion_prolog.entities.Symptom;
 import donpedromz.integracion_prolog.services.SpecialistService;
 import donpedromz.integracion_prolog.ui.DiagnosticFrame;
+import donpedromz.integracion_prolog.ui.ConsultPatientDiagnoseFrame;
 import donpedromz.integracion_prolog.ui.FilterFrame;
 import donpedromz.integracion_prolog.ui.SymptomSelectionFrame;
 import donpedromz.integracion_prolog.ui.EntryFrame;
+import donpedromz.integracion_prolog.ui.StatsFrame;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -26,6 +28,8 @@ public class SpecialistController {
     private SymptomSelectionFrame diagnoseFrame;
     private DiagnosticFrame diagnosticFrame;
     private FilterFrame filterFrame;
+    private ConsultPatientDiagnoseFrame consultFrame;
+    private StatsFrame statsFrame;
     private List<Diagnostic> currentDiagnostics;
     private Patient currentPatient;
     private SpecialistService service;
@@ -55,6 +59,23 @@ public class SpecialistController {
                 );
             }
         }
+    }
+
+    public void handleReturnHome() {
+        // Close current diagnostic-related frames
+        if (this.diagnosticFrame != null) {
+            this.diagnosticFrame.dispose();
+            this.diagnosticFrame = null;
+        }
+        if (this.filterFrame != null) {
+            this.filterFrame.dispose();
+            this.filterFrame = null;
+        }
+        // Reset state and show entry frame
+        this.currentDiagnostics = null;
+        this.currentPatient = null;
+        this.entryFrame = new EntryFrame(this);
+        displayFrame(this.entryFrame);
     }
 
     public EntryFrame getEntryFrame() {
@@ -194,6 +215,62 @@ public class SpecialistController {
         }
     }
 
+    public void handleOpenConsultDiagnose() {
+        try {
+            this.service.ensureDiagnosticsReadyForConsult();
+            this.consultFrame = new ConsultPatientDiagnoseFrame(this);
+            displayFrame(this.consultFrame);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    ex.getMessage() != null ? ex.getMessage() : "No se pudo cargar la consulta de diagnosticos",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    public void handleOpenStats() {
+        List<Object[]> topDiseases = this.service.getTopDiseases(5);
+        List<Object[]> topSymptoms = this.service.getTopSymptoms(5);
+        this.statsFrame = new StatsFrame();
+        this.statsFrame.loadData(topDiseases, topSymptoms);
+        displayFrame(this.statsFrame);
+    }
+
+    public void handleConsultSearchClicked() {
+        if (this.consultFrame == null) {
+            return;
+        }
+
+        String name = this.consultFrame.getNameField().getText();
+        String ageText = this.consultFrame.getAgeField().getText();
+
+        try {
+            validateStringWithoutAccents(name);
+            int age = parseAge(ageText);
+            List<Diagnostic> diagnostics = this.service.consultDiagnostics(name.trim(), age);
+            if (diagnostics.isEmpty()) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "No se encontraron diagnosticos para el paciente ingresado",
+                        "Sin resultados",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+                this.consultFrame.clearTable();
+                return;
+            }
+            this.consultFrame.loadDiagnostics(diagnostics);
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    ex.getMessage() != null ? ex.getMessage() : "Datos invalidos",
+                    "Error de validacion",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
     private void validateStringWithoutAccents(String stringToValidate) throws IllegalArgumentException{
         if (stringToValidate == null || stringToValidate.trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre no puede estar vacio");
@@ -225,5 +302,20 @@ public class SpecialistController {
             throw new IllegalArgumentException("La categoria solo puede contener letras y espacios");
         }
         return trimmed;
+    }
+
+    private int parseAge(String rawAge) {
+        if (rawAge == null || rawAge.trim().isEmpty()) {
+            throw new IllegalArgumentException("La edad es obligatoria");
+        }
+        try {
+            int age = Integer.parseInt(rawAge.trim());
+            if (age < 0 || age > 120) {
+                throw new IllegalArgumentException("La edad debe estar entre 0 y 120");
+            }
+            return age;
+        } catch (NumberFormatException ex) {
+            throw new IllegalArgumentException("La edad debe ser un numero entero");
+        }
     }
 }

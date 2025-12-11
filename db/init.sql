@@ -44,35 +44,28 @@ CREATE TABLE disease_recommendation (
     CONSTRAINT fk_dr_rec FOREIGN KEY (recommendation_id) REFERENCES recommendation(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE patient (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(150) NOT NULL,
-    age INT NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 CREATE TABLE diagnostic (
     id INT AUTO_INCREMENT PRIMARY KEY,
     patient_name VARCHAR(150) NOT NULL,
     patient_age INT NOT NULL,
-    disease_id INT NOT NULL,
-    disease_name VARCHAR(200) NOT NULL,
-    category VARCHAR(150),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_diagnostic_disease FOREIGN KEY (disease_id) REFERENCES disease(id)
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE diagnostic_symptom (
+-- síntomas de entrada de un diagnóstico
+CREATE TABLE diagnostic_input_symptom (
     id INT AUTO_INCREMENT PRIMARY KEY,
     diagnostic_id INT NOT NULL,
     symptom_description VARCHAR(255) NOT NULL,
-    CONSTRAINT fk_diag_sym_diagnostic FOREIGN KEY (diagnostic_id) REFERENCES diagnostic(id) ON DELETE CASCADE
+    CONSTRAINT fk_diag_input_sym FOREIGN KEY (diagnostic_id) REFERENCES diagnostic(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE diagnostic_recomendation (
+-- enfermedades detectadas dentro de un diagnóstico (relación muchos a muchos)
+CREATE TABLE diagnostic_disease (
     id INT AUTO_INCREMENT PRIMARY KEY,
     diagnostic_id INT NOT NULL,
-    recomendation_description VARCHAR(255) NOT NULL,
-    CONSTRAINT fk_diag_rec_diagnostic FOREIGN KEY (diagnostic_id) REFERENCES diagnostic(id) ON DELETE CASCADE
+    disease_id INT NOT NULL,
+    CONSTRAINT fk_diag_dis_diagnostic FOREIGN KEY (diagnostic_id) REFERENCES diagnostic(id) ON DELETE CASCADE,
+    CONSTRAINT fk_diag_dis_disease FOREIGN KEY (disease_id) REFERENCES disease(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Categorías

@@ -8,8 +8,8 @@ import donpedromz.integracion_prolog.controllers.SpecialistController;
 import donpedromz.integracion_prolog.entities.Diagnostic;
 import donpedromz.integracion_prolog.entities.Recomendation;
 import donpedromz.integracion_prolog.entities.Symptom;
-import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
@@ -17,21 +17,24 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author juanp
  */
-public class FilterFrame extends javax.swing.JFrame {
+public class ConsultPatientDiagnoseFrame extends javax.swing.JFrame {
 
-    private final SpecialistController controller;
-    private List<Diagnostic> diagnostics = new ArrayList<>();
+    private SpecialistController controller;
 
     /**
-     * Creates new form FilterFrame
+     * Creates new form ConsultPatientDiagnoseFrame
      */
-    public FilterFrame(SpecialistController controller, List<Diagnostic> diagnostics) {
-        initComponents();
+    public ConsultPatientDiagnoseFrame(SpecialistController controller) {
         this.controller = controller;
-        this.diagnostics = diagnostics != null ? new ArrayList<>(diagnostics) : new ArrayList<>();
-        this.setLocationRelativeTo(null);
+        initComponents();
+        configUi();
+    }
+
+    private void configUi() {
+        setLocationRelativeTo(null);
+        setResizable(false);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.setResizable(false);
+        resetTable();
     }
 
     /**
@@ -45,15 +48,16 @@ public class FilterFrame extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jPanel4 = new javax.swing.JPanel();
+        ageField = new javax.swing.JTextField();
+        searchButton = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        nameField = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel2.setBackground(new java.awt.Color(102, 102, 255));
@@ -62,25 +66,34 @@ public class FilterFrame extends javax.swing.JFrame {
         jLabel10.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 18)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(0, 0, 0));
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel10.setText("INGRESAR CATEGORIA");
-        jPanel2.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 180, -1, -1));
+        jLabel10.setText("INGRESAR EDAD");
+        jPanel2.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 180, -1, -1));
 
-        jTextField1.setBorder(null);
-        jPanel2.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 230, 325, 38));
+        ageField.setBorder(null);
+        jPanel2.add(ageField, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 325, 38));
 
-        jPanel4.setBackground(new java.awt.Color(255, 51, 51));
-        jPanel4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jPanel4.addMouseListener(new java.awt.event.MouseAdapter() {
+        searchButton.setBackground(new java.awt.Color(255, 51, 51));
+        searchButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        searchButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jPanel4MouseClicked(evt);
+                searchButtonMouseClicked(evt);
             }
         });
-        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        searchButton.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/donpedromz/integracion_prolog/assets/icons/filtrar_icono.png"))); // NOI18N
-        jPanel4.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 130, 140));
+        searchButton.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 130, 140));
 
-        jPanel2.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 300, 130, 140));
+        jPanel2.add(searchButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 300, 130, 140));
+
+        jLabel11.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 18)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel11.setText("INGRESAR NOMBRE");
+        jPanel2.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 90, -1, -1));
+
+        nameField.setBorder(null);
+        jPanel2.add(nameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 325, 38));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 360, 590));
 
@@ -97,7 +110,7 @@ public class FilterFrame extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 0, 580, 590));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 0, 720, 590));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -113,65 +126,83 @@ public class FilterFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jPanel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel4MouseClicked
-        if (controller != null) {
-            controller.handleApplyFilterClicked();
+    private void searchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchButtonMouseClicked
+        if (this.controller != null) {
+            this.controller.handleConsultSearchClicked();
         }
-    }//GEN-LAST:event_jPanel4MouseClicked
+    }//GEN-LAST:event_searchButtonMouseClicked
 
-    public javax.swing.JPanel getApplyFilterButton() {
-        return jPanel4;
+    public JTextField getNameField() {
+        return nameField;
     }
 
-    public JTextField getCategoryField() {
-        return jTextField1;
+    public JTextField getAgeField() {
+        return ageField;
     }
 
-    public void showFilteredDiagnostics(List<Diagnostic> filteredDiagnostics) {
-        String[] cols = {"Id Enfermedad", "Enfermedad", "Categoria", "Sintomas", "Recomendaciones"};
-        DefaultTableModel model = new DefaultTableModel(cols, 0) {
+    public JTable getResultsTable() {
+        return jTable1;
+    }
+
+    public void loadDiagnostics(List<Diagnostic> diagnostics) {
+        resetTable();
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        for (Diagnostic diagnostic : diagnostics) {
+            List<donpedromz.integracion_prolog.entities.Disease> diseases = diagnostic.getDiseases();
+            if (diseases == null || diseases.isEmpty()) {
+                model.addRow(new Object[]{
+                    diagnostic.getId(),
+                    null,
+                    "",
+                    "",
+                    "",
+                    ""
+                });
+                continue;
+            }
+
+            for (donpedromz.integracion_prolog.entities.Disease disease : diseases) {
+                String symptoms = joinSymptoms(disease != null ? disease.getSymptoms() : null);
+                String recs = joinRecs(disease != null ? disease.getRecomendations() : null);
+                model.addRow(new Object[]{
+                    diagnostic.getId(),
+                    disease != null ? disease.getId() : null,
+                    disease != null ? disease.getName() : "",
+                    (disease != null && disease.getCategory() != null) ? disease.getCategory().getName() : "",
+                    symptoms,
+                    recs
+                });
+            }
+        }
+    }
+
+    public void clearTable() {
+        resetTable();
+    }
+
+    private void resetTable() {
+        jTable1.setModel(new DefaultTableModel(
+            new Object [][] {},
+            new String [] {
+                "Id Diagnostico", "Id Enfermedad", "Enfermedad", "Categoria", "Sintomas", "Recomendaciones"
+            }
+        ) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
-        };
-
-        List<Diagnostic> toRender = filteredDiagnostics != null ? filteredDiagnostics : new ArrayList<>();
-        for (Diagnostic d : toRender) {
-            List<donpedromz.integracion_prolog.entities.Disease> diseases = d.getDiseases();
-            if (diseases == null || diseases.isEmpty()) {
-                model.addRow(new Object[]{"", "", "", "", ""});
-                continue;
-            }
-            for (donpedromz.integracion_prolog.entities.Disease disease : diseases) {
-                String sintomasEnfermedad = joinSymptoms(disease != null ? disease.getSymptoms() : null);
-                String recomendaciones = joinRecs(disease != null ? disease.getRecomendations() : null);
-                model.addRow(new Object[]{
-                    disease != null ? disease.getId() : null,
-                    disease != null ? disease.getName() : "",
-                    (disease != null && disease.getCategory() != null) ? disease.getCategory().getName() : "",
-                    sintomasEnfermedad,
-                    recomendaciones
-                });
-            }
-        }
-
-        jTable1.setModel(model);
-        jTable1.setRowHeight(25);
-    }
-
-    public List<Diagnostic> getDiagnostics() {
-        return new ArrayList<>(diagnostics);
+        });
     }
 
     private String joinSymptoms(List<Symptom> symptoms) {
-        if (symptoms == null) return "";
+        if (symptoms == null) {
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < symptoms.size(); i++) {
             Symptom symptom = symptoms.get(i);
-            if (symptom != null) {
-                sb.append(symptom.getDescription());
-            }
+            String value = symptom != null ? symptom.getDescription() : "";
+            sb.append(value);
             if (i < symptoms.size() - 1) {
                 sb.append(", ");
             }
@@ -180,13 +211,14 @@ public class FilterFrame extends javax.swing.JFrame {
     }
 
     private String joinRecs(List<Recomendation> recs) {
-        if (recs == null) return "";
+        if (recs == null) {
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < recs.size(); i++) {
             Recomendation rec = recs.get(i);
-            if (rec != null) {
-                sb.append(rec.getDescription());
-            }
+            String value = rec != null ? rec.getDescription() : "";
+            sb.append(value);
             if (i < recs.size() - 1) {
                 sb.append(", ");
             }
@@ -196,13 +228,15 @@ public class FilterFrame extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField ageField;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField nameField;
+    private javax.swing.JPanel searchButton;
     // End of variables declaration//GEN-END:variables
 }

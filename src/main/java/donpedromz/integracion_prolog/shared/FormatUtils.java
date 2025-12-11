@@ -128,12 +128,18 @@ public final class FormatUtils {
             return result;
         }
 
-        // Convertimos el Term a un arreglo de Terms
         try {
-            Term[] elements = listTerm.toTermArray();
-            for (Term element : elements) {
-                result.add(element.name());
+            Term cursor = listTerm;
+            while (cursor.isListPair()) {
+                Term head = cursor.arg(1);
+                result.add(head.name());
+                cursor = cursor.arg(2);
             }
+            if (cursor.isListNil()) {
+                return result;
+            }
+            // Si no es lista bien formada, tomar su representación
+            result.add(cursor.toString());
         } catch (Exception e) {
             // Si falla la conversión, intentamos obtenerlo como átomo simple
             result.add(listTerm.toString());

@@ -1,5 +1,6 @@
 
 :- dynamic enfermedad/5.
+:- dynamic diagnostico_paciente/3.
 
 % Base de conocimientos de enfermedades.
 
@@ -51,3 +52,8 @@ recomendacion(Enfermedad, Recomendacion) :-
 enfermedades_por_sintoma(Sintoma, Enfermedad) :-
 	enfermedad(_, Enfermedad, Sintomas, _, _),
 	contiene(Sintoma, Sintomas).
+
+% consulta_diagnostico(+Nombre, +Edad, -Id)
+% Regla para consultar diagnosticos previamente cargados como hechos dinamicos diagnostico_paciente/3
+consulta_diagnostico(Nombre, Edad, Id) :-
+	diagnostico_paciente(Id, Nombre, Edad).
