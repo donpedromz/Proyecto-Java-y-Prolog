@@ -16,7 +16,7 @@ public class Disease {
     private Category category;
     private List<Symptom> symptoms;
     private List<Recomendation> recomendations;
-
+    public Disease(){};
     public Disease(int id, String name) {
         this.id = id;
         this.name = name;
@@ -69,4 +69,5 @@ public class Disease {
     public void setRecomendations(List<Recomendation> recomendations) {
         this.recomendations = recomendations;
     }
+    
 }

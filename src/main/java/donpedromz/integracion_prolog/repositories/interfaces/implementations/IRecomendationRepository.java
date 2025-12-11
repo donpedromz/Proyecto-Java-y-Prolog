@@ -12,4 +12,6 @@ public interface IRecomendationRepository extends IRepository<Recomendation> {
     List<Recomendation> listByDiseaseId(long diseaseId);
     void associateWithDisease(long diseaseId, List<Recomendation> recommendations);
     void saveAll(List<Recomendation> recommendations);
+    Recomendation getByDescription(String description);
+    Recomendation save(Recomendation recomendation);
 }

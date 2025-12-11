@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import donpedromz.integracion_prolog.shared.MySQLConnection;
+import donpedromz.integracion_prolog.shared.FormatUtils;
 
 /**
  *
@@ -127,6 +128,46 @@ public class RecomendationRepository implements IRecomendationRepository {
     @Override
     public void saveAll(List<Recomendation> recommendations) {
         if (recommendations == null || recommendations.isEmpty()) return;
-        // Implementar lógica de creación si es necesaria.
+        for (Recomendation rec : recommendations) {
+            save(rec);
+        }
+    }
+
+    @Override
+    public Recomendation getByDescription(String description) {
+        String sql = "SELECT id, description FROM recommendation WHERE LOWER(description) = LOWER(?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, description);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapEntity(rs);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching recommendation by description", e);
+        }
+        return null;
+    }
+
+    @Override
+    public Recomendation save(Recomendation recomendation) {
+        if (recomendation == null) {
+            return null;
+        }
+        String sql = "INSERT INTO recommendation (code, description) VALUES (?, ?)";
+        String code = FormatUtils.slug(recomendation.getDescription());
+        try (PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, code);
+            ps.setString(2, recomendation.getDescription());
+            ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    recomendation.setId(rs.getLong(1));
+                }
+            }
+            return recomendation;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error saving recommendation", e);
+        }
     }
 }

@@ -75,12 +75,15 @@ public class SymptomSelectionFrame extends javax.swing.JFrame {
     /**
      * Creates new form DiagnosticFrame
      */
-    public SymptomSelectionFrame(List<Symptom> symptoms, SpecialistController controller) {
+    public SymptomSelectionFrame(SpecialistController controller) {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        initDiseaseTable(symptoms);
         this.controller = controller;
+        List<Symptom> symptoms = controller != null && controller.getService() != null
+                ? controller.getService().getSymptoms()
+                : new ArrayList<>();
+        initDiseaseTable(symptoms);
     }
     public void cleanSymptomListCheck(){
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();

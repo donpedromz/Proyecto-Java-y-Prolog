@@ -38,23 +38,34 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                  <Component id="Imagen" min="-2" pref="70" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="133" max="-2" attributes="0"/>
-              </Group>
               <Group type="102" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="Title" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
-              </Group>
-              <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="Volver" min="-2" max="-2" attributes="0"/>
-                      <Component id="GuardarEnfermedad" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="Title" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="114" max="-2" attributes="0"/>
+                          <Component id="Imagen" min="-2" pref="70" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="LabelSympton5" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="GuardarEnfermedad" max="32767" attributes="0"/>
+                                  <Component id="jTextField1" max="32767" attributes="0"/>
+                                  <Component id="LabelSympton6" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="categoryField" alignment="0" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="69" max="-2" attributes="0"/>
+                          <Component id="Volver" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
-                  <EmptySpace min="-2" pref="59" max="-2" attributes="0"/>
+                  <EmptySpace pref="15" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -65,11 +76,19 @@
                   <Component id="Title" min="-2" pref="40" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="Imagen" min="-2" pref="80" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="59" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                  <Component id="LabelSympton5" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jTextField1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="LabelSympton6" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="categoryField" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="43" max="32767" attributes="0"/>
                   <Component id="GuardarEnfermedad" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="Volver" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="119" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -79,6 +98,9 @@
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial Rounded MT Bold" size="16" style="0"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="0" green="0" red="0" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" value="REGISTRO DE NUEVAS ENFERMEDADES"/>
           </Properties>
@@ -182,6 +204,32 @@
             </Component>
           </SubComponents>
         </Container>
+        <Component class="javax.swing.JTextField" name="jTextField1">
+        </Component>
+        <Component class="javax.swing.JLabel" name="LabelSympton5">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial Rounded MT Bold" size="12" style="0"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="0" green="0" red="0" type="rgb"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Nombre Enfermedad"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="LabelSympton6">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial Rounded MT Bold" size="12" style="0"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="0" green="0" red="0" type="rgb"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Categoria"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="categoryField">
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="PanelDer">
@@ -203,13 +251,13 @@
                   <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="TextField3" min="-2" pref="381" max="-2" attributes="0"/>
+                          <Component id="sint4Field" min="-2" pref="381" max="-2" attributes="0"/>
                           <Component id="LabelSympton3" min="-2" max="-2" attributes="0"/>
                           <Component id="LabelSympton1" min="-2" max="-2" attributes="0"/>
-                          <Component id="TextField1" min="-2" pref="381" max="-2" attributes="0"/>
+                          <Component id="sint1Field" min="-2" pref="381" max="-2" attributes="0"/>
                           <Component id="LabelSympton2" min="-2" max="-2" attributes="0"/>
-                          <Component id="TextField2" min="-2" pref="381" max="-2" attributes="0"/>
-                          <Component id="TextField4" alignment="0" min="-2" pref="381" max="-2" attributes="0"/>
+                          <Component id="sint2Field" min="-2" pref="381" max="-2" attributes="0"/>
+                          <Component id="sint3Field" alignment="0" min="-2" pref="381" max="-2" attributes="0"/>
                           <Component id="LabelSympton4" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="LabelRecommendations" alignment="0" max="32767" attributes="0"/>
@@ -225,24 +273,24 @@
                   <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
                   <Component id="LabelSympton1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="TextField1" min="-2" max="-2" attributes="0"/>
+                  <Component id="sint1Field" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="LabelSympton2" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="TextField2" min="-2" max="-2" attributes="0"/>
+                  <Component id="sint2Field" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="LabelSympton3" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="TextField4" min="-2" max="-2" attributes="0"/>
+                  <Component id="sint3Field" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="LabelSympton4" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="TextField3" min="-2" max="-2" attributes="0"/>
+                  <Component id="sint4Field" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                   <Component id="LabelRecommendations" min="-2" pref="40" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="35" max="32767" attributes="0"/>
+                  <EmptySpace pref="15" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -280,39 +328,35 @@
             <Property name="text" type="java.lang.String" value="Sintoma 4"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="TextField1">
+        <Component class="javax.swing.JTextField" name="sint1Field">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial Rounded MT Bold" size="12" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Ingrese sintoma 1"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="TextField2">
+        <Component class="javax.swing.JTextField" name="sint2Field">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial Rounded MT Bold" size="12" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Ingrese sintoma 2"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="TextField2ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sint2FieldActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JTextField" name="TextField3">
+        <Component class="javax.swing.JTextField" name="sint4Field">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial Rounded MT Bold" size="12" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Ingrese sintoma 4"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="TextField4">
+        <Component class="javax.swing.JTextField" name="sint3Field">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial Rounded MT Bold" size="12" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Ingrese sintoma 3"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="LabelRecommendations">
@@ -330,14 +374,13 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JTextArea" name="jTextArea1">
+            <Component class="javax.swing.JTextArea" name="recomendationsArea">
               <Properties>
                 <Property name="columns" type="int" value="20"/>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial Rounded MT Bold" size="12" style="0"/>
                 </Property>
                 <Property name="rows" type="int" value="5"/>
-                <Property name="text" type="java.lang.String" value="Ingrese tratamiento a seguir"/>
               </Properties>
             </Component>
           </SubComponents>

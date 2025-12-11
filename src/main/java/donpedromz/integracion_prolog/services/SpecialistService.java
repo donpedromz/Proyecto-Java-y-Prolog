@@ -1,13 +1,17 @@
 package donpedromz.integracion_prolog.services;
 
+import donpedromz.integracion_prolog.entities.Category;
 import donpedromz.integracion_prolog.entities.Diagnostic;
 import donpedromz.integracion_prolog.entities.Disease;
-import donpedromz.integracion_prolog.entities.Symptom;
 import donpedromz.integracion_prolog.entities.Patient;
+import donpedromz.integracion_prolog.entities.Recomendation;
+import donpedromz.integracion_prolog.entities.Symptom;
 import donpedromz.integracion_prolog.repositories.DiagnosticRepository;
 import donpedromz.integracion_prolog.repositories.interfaces.implementations.ICategoryRepository;
 import donpedromz.integracion_prolog.repositories.interfaces.implementations.IDiseaseRepository;
+import donpedromz.integracion_prolog.repositories.interfaces.implementations.IRecomendationRepository;
 import donpedromz.integracion_prolog.repositories.interfaces.implementations.ISymptomRepository;
+import donpedromz.integracion_prolog.repositories.RecomendationRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +34,7 @@ public class SpecialistService {
     private ICategoryRepository categoryRepository;
     private IDiseaseRepository diseaseRepository;
     private ISymptomRepository symptomRepository;
+    private IRecomendationRepository recomendationRepository;
     private DiagnosticRepository diagnosticRepository = new DiagnosticRepository();
     private List<Integer> diagnosticsLoadedIds = new ArrayList<>();
     private boolean diagnosticsLoadedOnce = false;
@@ -46,6 +51,7 @@ public class SpecialistService {
         this.categoryRepository = categoryRepository;
         this.diseaseRepository = diseaseRepository;
         this.symptomRepository = symptomRepository;
+        this.recomendationRepository = new RecomendationRepository();
         ensureDiagnosticsLoadedInProlog();
     }
 
@@ -207,6 +213,85 @@ public class SpecialistService {
         return diagnosticRepository.topSymptoms(limit);
     }
 
+    public Disease createDisease(String diseaseName, String categoryName, List<String> symptomDescriptions, List<String> recommendationDescriptions) {
+        String normalizedDiseaseName = normalizeText(diseaseName, true, "nombre de la enfermedad");
+        String normalizedCategoryName = normalizeText(categoryName, false, "categoria");
+
+        if (symptomDescriptions == null || symptomDescriptions.isEmpty()) {
+            throw new IllegalArgumentException("Debes ingresar al menos un sintoma");
+        }
+        if (recommendationDescriptions == null || recommendationDescriptions.isEmpty()) {
+            throw new IllegalArgumentException("Debes ingresar al menos una recomendacion");
+        }
+
+        List<String> normalizedSymptoms = new ArrayList<>();
+        for (String s : symptomDescriptions) {
+            normalizedSymptoms.add(normalizeText(s, false, "sintoma"));
+        }
+
+        List<String> normalizedRecommendations = new ArrayList<>();
+        for (String r : recommendationDescriptions) {
+            normalizedRecommendations.add(normalizeText(r, false, "recomendacion"));
+        }
+
+        System.out.println("[CreateDisease] Preparando persistencia: nombre=" + normalizedDiseaseName
+            + ", categoria=" + normalizedCategoryName
+            + ", sintomas=" + normalizedSymptoms
+            + ", recomendaciones=" + normalizedRecommendations);
+
+        if (diseaseRepository.getByName(normalizedDiseaseName) != null) {
+            throw new IllegalArgumentException("La enfermedad ya se encuentra registrada");
+        }
+
+        Category category = categoryRepository.getByName(normalizedCategoryName);
+        if (category == null) {
+            category = new Category(0, normalizedCategoryName);
+            category = categoryRepository.save(category);
+            System.out.println("[CreateDisease] Categoria creada id=" + category.getId() + " nombre=" + category.getName());
+        } else {
+            System.out.println("[CreateDisease] Categoria existente id=" + category.getId() + " nombre=" + category.getName());
+        }
+
+        List<Symptom> symptomEntities = new ArrayList<>();
+        for (String s : normalizedSymptoms) {
+            Symptom symptom = symptomRepository.getByDescription(s);
+            if (symptom == null) {
+                symptom = symptomRepository.save(new Symptom(0, s));
+                System.out.println("[CreateDisease] Sintoma creado id=" + symptom.getId() + " desc=" + symptom.getDescription());
+            } else {
+                System.out.println("[CreateDisease] Sintoma existente id=" + symptom.getId() + " desc=" + symptom.getDescription());
+            }
+            symptomEntities.add(symptom);
+        }
+
+        List<Recomendation> recEntities = new ArrayList<>();
+        for (String r : normalizedRecommendations) {
+            Recomendation rec = recomendationRepository.getByDescription(r);
+            if (rec == null) {
+                rec = recomendationRepository.save(new Recomendation(0, r));
+                System.out.println("[CreateDisease] Recomendacion creada id=" + rec.getId() + " desc=" + rec.getDescription());
+            } else {
+                System.out.println("[CreateDisease] Recomendacion existente id=" + rec.getId() + " desc=" + rec.getDescription());
+            }
+            recEntities.add(rec);
+        }
+
+        Disease disease = new Disease();
+        disease.setName(normalizedDiseaseName);
+        disease.setCategory(category);
+        disease.setSymptoms(symptomEntities);
+        disease.setRecomendations(recEntities);
+
+        Disease saved = diseaseRepository.saveDisease(disease);
+        System.out.println("[CreateDisease] Enfermedad persistida id=" + saved.getId()
+            + " nombre=" + saved.getName()
+            + " categoria=" + (saved.getCategory() != null ? saved.getCategory().getName() : "")
+            + " sintomasIds=" + extractIds(saved.getSymptoms())
+            + " recIds=" + extractIds(saved.getRecomendations()));
+        assertDiseaseInProlog(saved);
+        return saved;
+    }
+
     public List<Diagnostic> filterDiagnosticsByCategory(List<Diagnostic> diagnostics, String category) {
         if (diagnostics == null) {
             return new ArrayList<>();
@@ -217,17 +302,21 @@ public class SpecialistService {
             if (d == null || d.getDiseases() == null) {
                 continue;
             }
-            boolean matches = false;
+            List<Disease> matchedDiseases = new ArrayList<>();
             for (Disease dis : d.getDiseases()) {
                 if (dis == null || dis.getCategory() == null) continue;
                 String diseaseCategorySlug = FormatUtils.slug(dis.getCategory().getName());
                 if (normalizedSlug.equals(diseaseCategorySlug)) {
-                    matches = true;
-                    break;
+                    matchedDiseases.add(dis);
                 }
             }
-            if (matches) {
-                filtered.add(d);
+            if (!matchedDiseases.isEmpty()) {
+                Diagnostic copy = new Diagnostic();
+                copy.setId(d.getId());
+                copy.setPatient(d.getPatient());
+                copy.setInputSymptoms(d.getInputSymptoms());
+                copy.setDiseases(matchedDiseases);
+                filtered.add(copy);
             }
         }
         if (filtered.isEmpty()) {
@@ -330,6 +419,7 @@ public class SpecialistService {
                 age
             );
             System.out.println("Assertando diagnostico en Prolog: diagId=" + diagnostic.getId() + ", paciente='" + diagnostic.getPatient().getName() + "', edad=" + age);
+            System.out.println("[Prolog] Hecho -> " + fact);
             PrologQueryExecutor.createDynamicFact(fact);
             diagnosticsLoadedIds.add(diagnostic.getId());
         }
@@ -455,5 +545,72 @@ public class SpecialistService {
 
     public ISymptomRepository getSymptomRepository() {
         return symptomRepository;
+    }
+
+    private String normalizeText(String rawValue, boolean allowNumbers, String fieldLabel) {
+        if (rawValue == null) {
+            throw new IllegalArgumentException("El campo " + fieldLabel + " no puede estar vacio");
+        }
+        String cleaned = rawValue.trim().replaceAll("\\s+", " ");
+        if (cleaned.isEmpty()) {
+            throw new IllegalArgumentException("El campo " + fieldLabel + " no puede estar vacio");
+        }
+        if (cleaned.length() > 150) {
+            throw new IllegalArgumentException("El campo " + fieldLabel + " no puede exceder los 150 caracteres");
+        }
+        String pattern = allowNumbers ? "[a-zA-Z0-9 ]+" : "[a-zA-Z ]+";
+        if (!cleaned.matches(pattern)) {
+            throw new IllegalArgumentException("El campo " + fieldLabel + " no puede contener caracteres especiales ni acentos");
+        }
+        return cleaned;
+    }
+
+    private void assertDiseaseInProlog(Disease disease) {
+        if (disease == null) {
+            return;
+        }
+        List<String> symptomSlugs = new ArrayList<>();
+        if (disease.getSymptoms() != null) {
+            for (Symptom s : disease.getSymptoms()) {
+                if (s != null) {
+                    symptomSlugs.add(FormatUtils.slug(s.getDescription()));
+                }
+            }
+        }
+
+        List<String> recSlugs = new ArrayList<>();
+        if (disease.getRecomendations() != null) {
+            for (Recomendation r : disease.getRecomendations()) {
+                if (r != null) {
+                    recSlugs.add(FormatUtils.slug(r.getDescription()));
+                }
+            }
+        }
+
+        String fact = String.format(
+                "assertz(enfermedad(%d, '%s', %s, '%s', %s))",
+                disease.getId(),
+                FormatUtils.slug(disease.getName()),
+                buildPrologList(symptomSlugs),
+                FormatUtils.slug(disease.getCategory().getName()),
+                buildPrologList(recSlugs)
+        );
+        System.out.println("[Prolog] Hecho enfermedad -> " + fact);
+        PrologQueryExecutor.createDynamicFact(fact);
+    }
+
+    private String extractIds(List<? extends Object> items) {
+        if (items == null || items.isEmpty()) {
+            return "[]";
+        }
+        List<String> ids = new ArrayList<>();
+        for (Object item : items) {
+            if (item instanceof Symptom s) {
+                ids.add(String.valueOf(s.getId()));
+            } else if (item instanceof Recomendation r) {
+                ids.add(String.valueOf(r.getId()));
+            }
+        }
+        return ids.toString();
     }
 }

@@ -5,11 +5,13 @@
 package donpedromz.integracion_prolog.controllers;
 
 import donpedromz.integracion_prolog.entities.Diagnostic;
+import donpedromz.integracion_prolog.entities.Disease;
 import donpedromz.integracion_prolog.entities.Patient;
 import donpedromz.integracion_prolog.entities.Symptom;
 import donpedromz.integracion_prolog.services.SpecialistService;
 import donpedromz.integracion_prolog.ui.DiagnosticFrame;
 import donpedromz.integracion_prolog.ui.ConsultPatientDiagnoseFrame;
+import donpedromz.integracion_prolog.ui.CreateDisease;
 import donpedromz.integracion_prolog.ui.FilterFrame;
 import donpedromz.integracion_prolog.ui.SymptomSelectionFrame;
 import donpedromz.integracion_prolog.ui.EntryFrame;
@@ -30,6 +32,7 @@ public class SpecialistController {
     private FilterFrame filterFrame;
     private ConsultPatientDiagnoseFrame consultFrame;
     private StatsFrame statsFrame;
+    private JFrame createDiseaseFrame;
     private List<Diagnostic> currentDiagnostics;
     private Patient currentPatient;
     private SpecialistService service;
@@ -71,6 +74,10 @@ public class SpecialistController {
             this.filterFrame.dispose();
             this.filterFrame = null;
         }
+        if (this.createDiseaseFrame != null) {
+            this.createDiseaseFrame.dispose();
+            this.createDiseaseFrame = null;
+        }
         // Reset state and show entry frame
         this.currentDiagnostics = null;
         this.currentPatient = null;
@@ -95,9 +102,8 @@ public class SpecialistController {
     }
 
     private void handleDiagnoseButtonClicked() {
-        List<Symptom> symptoms = this.service.getSymptoms();
         this.entryFrame.dispose();
-        this.diagnoseFrame = new SymptomSelectionFrame(symptoms, this);
+        this.diagnoseFrame = new SymptomSelectionFrame(this);
         displayFrame(diagnoseFrame);
     }
 
@@ -107,6 +113,19 @@ public class SpecialistController {
                 frame.setVisible(true);
             }
         });
+    }
+
+    public void handleOpenCreateDisease() {
+        if (this.entryFrame != null) {
+            this.entryFrame.dispose();
+        }
+        CreateDisease panel = new CreateDisease(this);
+        this.createDiseaseFrame = new JFrame("Registrar enfermedad");
+        this.createDiseaseFrame.setContentPane(panel);
+        this.createDiseaseFrame.pack();
+        this.createDiseaseFrame.setLocationRelativeTo(null);
+        this.createDiseaseFrame.setResizable(false);
+        displayFrame(this.createDiseaseFrame);
     }
 
     public void setDiagnoseFrame(SymptomSelectionFrame diagnoseFrame) {
@@ -269,6 +288,29 @@ public class SpecialistController {
                     JOptionPane.ERROR_MESSAGE
             );
         }
+    }
+
+    public void handleCreateDiseaseSave(String diseaseName, String categoryName, List<String> symptoms, List<String> recommendations) {
+        if (symptoms == null || symptoms.stream().anyMatch(s -> s == null || s.trim().isEmpty())) {
+            throw new IllegalArgumentException("Todos los campos de sintoma son obligatorios");
+        }
+        if (recommendations == null || recommendations.isEmpty()) {
+            throw new IllegalArgumentException("Debes ingresar al menos una recomendacion separada por coma");
+        }
+
+        Disease created = this.service.createDisease(diseaseName, categoryName, symptoms, recommendations);
+        JOptionPane.showMessageDialog(
+                null,
+                "Enfermedad registrada correctamente (ID: " + created.getId() + ")",
+                "Exito",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+        if (this.createDiseaseFrame != null) {
+            this.createDiseaseFrame.dispose();
+            this.createDiseaseFrame = null;
+        }
+        this.entryFrame = new EntryFrame(this);
+        displayFrame(this.entryFrame);
     }
 
     private void validateStringWithoutAccents(String stringToValidate) throws IllegalArgumentException{

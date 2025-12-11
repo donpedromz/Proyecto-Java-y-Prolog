@@ -12,4 +12,6 @@ public interface ISymptomRepository extends IRepository<Symptom> {
     List<Symptom> listByDiseaseId(long diseaseId);
     void associateWithDisease(long diseaseId, List<Symptom> symptoms);
     void saveAll(List<Symptom> symptoms);
+    Symptom getByDescription(String description);
+    Symptom save(Symptom symptom);
 }

@@ -214,7 +214,7 @@ public class EntryFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void createDiseaseButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createDiseaseButtonMouseClicked
-        
+        this.controller.handleOpenCreateDisease();
     }//GEN-LAST:event_createDiseaseButtonMouseClicked
 
     private void generateDiagnoseButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_generateDiagnoseButtonMouseClicked

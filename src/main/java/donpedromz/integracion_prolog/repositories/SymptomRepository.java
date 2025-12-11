@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import donpedromz.integracion_prolog.shared.MySQLConnection;
+import donpedromz.integracion_prolog.shared.FormatUtils;
 
 /**
  *
@@ -127,5 +128,46 @@ public class SymptomRepository implements ISymptomRepository {
     @Override
     public void saveAll(List<Symptom> symptoms) {
         if (symptoms == null || symptoms.isEmpty()) return;
+        for (Symptom symptom : symptoms) {
+            save(symptom);
+        }
+    }
+
+    @Override
+    public Symptom getByDescription(String description) {
+        String sql = "SELECT id, description FROM symptom WHERE LOWER(description) = LOWER(?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, description);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapEntity(rs);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching symptom by description", e);
+        }
+        return null;
+    }
+
+    @Override
+    public Symptom save(Symptom symptom) {
+        if (symptom == null) {
+            return null;
+        }
+        String sql = "INSERT INTO symptom (code, description) VALUES (?, ?)";
+        String code = FormatUtils.slug(symptom.getDescription());
+        try (PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, code);
+            ps.setString(2, symptom.getDescription());
+            ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    symptom.setId(rs.getInt(1));
+                }
+            }
+            return symptom;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error saving symptom", e);
+        }
     }
 }

@@ -59,6 +59,22 @@ public class CategoryRepository implements ICategoryRepository {
     }
 
     @Override
+    public Category getByName(String name) {
+        String sql = "SELECT id, name FROM category WHERE LOWER(name) = LOWER(?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, name);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapEntity(rs);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching category by name", e);
+        }
+        return null;
+    }
+
+    @Override
     public Category update(Category updateDTO) {
         String sql = "UPDATE category SET name = ? WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -69,6 +85,23 @@ public class CategoryRepository implements ICategoryRepository {
             throw new RuntimeException("Error updating category", e);
         }
         return updateDTO;
+    }
+
+    @Override
+    public Category save(Category category) {
+        String sql = "INSERT INTO category (name) VALUES (?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, category.getName());
+            ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    category.setId(rs.getInt(1));
+                }
+            }
+            return category;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error saving category", e);
+        }
     }
 
     @Override

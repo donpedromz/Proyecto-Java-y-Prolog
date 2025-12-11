@@ -4,16 +4,25 @@
  */
 package donpedromz.integracion_prolog.ui;
 
+import donpedromz.integracion_prolog.controllers.SpecialistController;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
 /**
  *
  * @author milomnz
  */
 public class CreateDisease extends javax.swing.JPanel {
 
+    private transient SpecialistController controller;
+
     /**
      * Creates new form CreeateDisease
      */
-    public CreateDisease() {
+    public CreateDisease(SpecialistController controller) {
+        this.controller = controller;
         initComponents();
     }
 
@@ -33,18 +42,22 @@ public class CreateDisease extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         Volver = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        LabelSympton5 = new javax.swing.JLabel();
+        LabelSympton6 = new javax.swing.JLabel();
+        categoryField = new javax.swing.JTextField();
         PanelDer = new javax.swing.JPanel();
         LabelSympton1 = new javax.swing.JLabel();
         LabelSympton2 = new javax.swing.JLabel();
         LabelSympton3 = new javax.swing.JLabel();
         LabelSympton4 = new javax.swing.JLabel();
-        TextField1 = new javax.swing.JTextField();
-        TextField2 = new javax.swing.JTextField();
-        TextField3 = new javax.swing.JTextField();
-        TextField4 = new javax.swing.JTextField();
+        sint1Field = new javax.swing.JTextField();
+        sint2Field = new javax.swing.JTextField();
+        sint4Field = new javax.swing.JTextField();
+        sint3Field = new javax.swing.JTextField();
         LabelRecommendations = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        recomendationsArea = new javax.swing.JTextArea();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -52,6 +65,7 @@ public class CreateDisease extends javax.swing.JPanel {
         PanelIzq.setBackground(new java.awt.Color(255, 255, 255));
 
         Title.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 16)); // NOI18N
+        Title.setForeground(new java.awt.Color(0, 0, 0));
         Title.setText("REGISTRO DE NUEVAS ENFERMEDADES");
 
         Imagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/donpedromz/integracion_prolog/assets/icons/disease-prevention.png"))); // NOI18N
@@ -114,24 +128,39 @@ public class CreateDisease extends javax.swing.JPanel {
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
+        LabelSympton5.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 12)); // NOI18N
+        LabelSympton5.setForeground(new java.awt.Color(0, 0, 0));
+        LabelSympton5.setText("Nombre Enfermedad");
+
+        LabelSympton6.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 12)); // NOI18N
+        LabelSympton6.setForeground(new java.awt.Color(0, 0, 0));
+        LabelSympton6.setText("Categoria");
+
         javax.swing.GroupLayout PanelIzqLayout = new javax.swing.GroupLayout(PanelIzq);
         PanelIzq.setLayout(PanelIzqLayout);
         PanelIzqLayout.setHorizontalGroup(
             PanelIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelIzqLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(Imagen, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(133, 133, 133))
             .addGroup(PanelIzqLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(Title)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelIzqLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(PanelIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Volver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(GuardarEnfermedad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(59, 59, 59))
+                    .addGroup(PanelIzqLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(Title))
+                    .addGroup(PanelIzqLayout.createSequentialGroup()
+                        .addGap(114, 114, 114)
+                        .addComponent(Imagen, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(PanelIzqLayout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addGroup(PanelIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(LabelSympton5)
+                            .addGroup(PanelIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(GuardarEnfermedad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jTextField1)
+                                .addComponent(LabelSympton6)
+                                .addComponent(categoryField))))
+                    .addGroup(PanelIzqLayout.createSequentialGroup()
+                        .addGap(69, 69, 69)
+                        .addComponent(Volver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
         PanelIzqLayout.setVerticalGroup(
             PanelIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -140,11 +169,19 @@ public class CreateDisease extends javax.swing.JPanel {
                 .addComponent(Title, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(Imagen, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(59, 59, 59)
+                .addGap(25, 25, 25)
+                .addComponent(LabelSympton5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(LabelSympton6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(categoryField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
                 .addComponent(GuardarEnfermedad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(Volver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(119, Short.MAX_VALUE))
+                .addGap(14, 14, 14))
         );
 
         add(PanelIzq, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 340, 500));
@@ -163,27 +200,22 @@ public class CreateDisease extends javax.swing.JPanel {
         LabelSympton4.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 12)); // NOI18N
         LabelSympton4.setText("Sintoma 4");
 
-        TextField1.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 12)); // NOI18N
-        TextField1.setText("Ingrese sintoma 1");
+        sint1Field.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 12)); // NOI18N
 
-        TextField2.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 12)); // NOI18N
-        TextField2.setText("Ingrese sintoma 2");
-        TextField2.addActionListener(this::TextField2ActionPerformed);
+        sint2Field.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 12)); // NOI18N
+        sint2Field.addActionListener(this::sint2FieldActionPerformed);
 
-        TextField3.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 12)); // NOI18N
-        TextField3.setText("Ingrese sintoma 4");
+        sint4Field.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 12)); // NOI18N
 
-        TextField4.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 12)); // NOI18N
-        TextField4.setText("Ingrese sintoma 3");
+        sint3Field.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 12)); // NOI18N
 
         LabelRecommendations.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 14)); // NOI18N
         LabelRecommendations.setText("INGRESE EL TRATAMIENTO PARA LA ENFERMEDAD");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 12)); // NOI18N
-        jTextArea1.setRows(5);
-        jTextArea1.setText("Ingrese tratamiento a seguir");
-        jScrollPane1.setViewportView(jTextArea1);
+        recomendationsArea.setColumns(20);
+        recomendationsArea.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 12)); // NOI18N
+        recomendationsArea.setRows(5);
+        jScrollPane1.setViewportView(recomendationsArea);
 
         javax.swing.GroupLayout PanelDerLayout = new javax.swing.GroupLayout(PanelDer);
         PanelDer.setLayout(PanelDerLayout);
@@ -193,13 +225,13 @@ public class CreateDisease extends javax.swing.JPanel {
                 .addGap(24, 24, 24)
                 .addGroup(PanelDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(PanelDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(TextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(sint4Field, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(LabelSympton3)
                         .addComponent(LabelSympton1)
-                        .addComponent(TextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(sint1Field, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(LabelSympton2)
-                        .addComponent(TextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(TextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(sint2Field, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(sint3Field, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(LabelSympton4))
                     .addComponent(LabelRecommendations, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING))
@@ -211,40 +243,88 @@ public class CreateDisease extends javax.swing.JPanel {
                 .addGap(50, 50, 50)
                 .addComponent(LabelSympton1)
                 .addGap(18, 18, 18)
-                .addComponent(TextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(sint1Field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(LabelSympton2)
                 .addGap(18, 18, 18)
-                .addComponent(TextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(sint2Field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(LabelSympton3)
                 .addGap(18, 18, 18)
-                .addComponent(TextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(sint3Field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(LabelSympton4)
                 .addGap(18, 18, 18)
-                .addComponent(TextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(sint4Field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(LabelRecommendations, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         add(PanelDer, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 0, 460, 500));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void TextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextField2ActionPerformed
+    private void sint2FieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sint2FieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_TextField2ActionPerformed
+    }//GEN-LAST:event_sint2FieldActionPerformed
 
     private void GuardarEnfermedadMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_GuardarEnfermedadMouseClicked
-        // TODO add your handling code here:
+        List<String> symptoms = collectSymptoms();
+        List<String> recommendations = collectRecommendations();
+
+        try {
+            this.controller.handleCreateDiseaseSave(
+                    jTextField1.getText(),
+                    categoryField.getText(),
+                    symptoms,
+                    recommendations
+            );
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    ex.getMessage() != null ? ex.getMessage() : "Datos invalidos",
+                    "Error de validacion",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    ex.getMessage() != null ? ex.getMessage() : "Error al registrar la enfermedad",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }//GEN-LAST:event_GuardarEnfermedadMouseClicked
 
     private void VolverMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_VolverMouseClicked
-        // TODO add your handling code here:
+        SwingUtilities.getWindowAncestor(this).dispose();
+        this.controller.handleReturnHome();
     }//GEN-LAST:event_VolverMouseClicked
+
+    private List<String> collectSymptoms() {
+        List<String> symptoms = new ArrayList<>();
+        symptoms.add(sint1Field.getText());
+        symptoms.add(sint2Field.getText());
+        symptoms.add(sint3Field.getText());
+        symptoms.add(sint4Field.getText());
+        return symptoms;
+    }
+
+    private List<String> collectRecommendations() {
+        List<String> recommendations = new ArrayList<>();
+        String raw = recomendationsArea.getText();
+        if (raw != null) {
+            String[] parts = raw.split(",");
+            for (String part : parts) {
+                if (part != null && !part.trim().isEmpty()) {
+                    recommendations.add(part.trim());
+                }
+            }
+        }
+        return recommendations;
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -255,17 +335,21 @@ public class CreateDisease extends javax.swing.JPanel {
     private javax.swing.JLabel LabelSympton2;
     private javax.swing.JLabel LabelSympton3;
     private javax.swing.JLabel LabelSympton4;
+    private javax.swing.JLabel LabelSympton5;
+    private javax.swing.JLabel LabelSympton6;
     private javax.swing.JPanel PanelDer;
     private javax.swing.JPanel PanelIzq;
-    private javax.swing.JTextField TextField1;
-    private javax.swing.JTextField TextField2;
-    private javax.swing.JTextField TextField3;
-    private javax.swing.JTextField TextField4;
     private javax.swing.JLabel Title;
     private javax.swing.JPanel Volver;
+    private javax.swing.JTextField categoryField;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextArea recomendationsArea;
+    private javax.swing.JTextField sint1Field;
+    private javax.swing.JTextField sint2Field;
+    private javax.swing.JTextField sint3Field;
+    private javax.swing.JTextField sint4Field;
     // End of variables declaration//GEN-END:variables
 }

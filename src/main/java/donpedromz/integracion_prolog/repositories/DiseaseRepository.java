@@ -115,6 +115,23 @@ public class DiseaseRepository implements IDiseaseRepository {
 	}
 
 	@Override
+	public Disease getByName(String name) {
+		String sql = "SELECT d.id, d.name, c.id as category_id, c.name as category_name " +
+				 "FROM disease d JOIN category c ON d.category_id = c.id WHERE LOWER(d.name) = LOWER(?)";
+		try (PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setString(1, name);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					return loadWithRelations(mapEntity(rs));
+				}
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException("Error fetching disease by name", e);
+		}
+		return null;
+	}
+
+	@Override
 	public Disease update(Disease updateDTO) {
 		String sql = "UPDATE disease SET name = ?, category_id = ? WHERE id = ?";
 		try (PreparedStatement ps = connection.prepareStatement(sql)) {

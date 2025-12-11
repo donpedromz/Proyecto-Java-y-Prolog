@@ -15,4 +15,5 @@ public interface IDiseaseRepository extends IRepository<Disease> {
     List<Recomendation> listRecommendationsByDiseaseId(long diseaseId);
     Disease loadWithRelations(Disease disease);
     List<Disease> getAllWithRelations();
+    Disease getByName(String name);
 }

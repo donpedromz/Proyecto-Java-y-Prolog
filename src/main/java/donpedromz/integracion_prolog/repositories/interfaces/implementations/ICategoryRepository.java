@@ -10,4 +10,6 @@ import java.util.List;
  */
 public interface ICategoryRepository extends IRepository<Category> {
     List<Disease> listDiseasesByCategoryName(String categoryName);
+    Category getByName(String name);
+    Category save(Category category);
 }
