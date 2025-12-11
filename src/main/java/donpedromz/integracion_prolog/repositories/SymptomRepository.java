@@ -107,4 +107,25 @@ public class SymptomRepository implements ISymptomRepository {
         }
         return symptoms;
     }
+
+    @Override
+    public void associateWithDisease(long diseaseId, List<Symptom> symptoms) {
+        if (symptoms == null || symptoms.isEmpty()) return;
+        String sql = "INSERT INTO disease_symptom (disease_id, symptom_id) VALUES (?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            for (Symptom s : symptoms) {
+                ps.setLong(1, diseaseId);
+                ps.setLong(2, s.getId());
+                ps.addBatch();
+            }
+            ps.executeBatch();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error asociando sintomas a enfermedad", e);
+        }
+    }
+
+    @Override
+    public void saveAll(List<Symptom> symptoms) {
+        if (symptoms == null || symptoms.isEmpty()) return;
+    }
 }

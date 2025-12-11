@@ -107,4 +107,26 @@ public class RecomendationRepository implements IRecomendationRepository {
         }
         return items;
     }
+
+    @Override
+    public void associateWithDisease(long diseaseId, List<Recomendation> recommendations) {
+        if (recommendations == null || recommendations.isEmpty()) return;
+        String sql = "INSERT INTO disease_recommendation (disease_id, recommendation_id) VALUES (?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            for (Recomendation r : recommendations) {
+                ps.setLong(1, diseaseId);
+                ps.setLong(2, r.getId());
+                ps.addBatch();
+            }
+            ps.executeBatch();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error asociando recomendaciones a enfermedad", e);
+        }
+    }
+
+    @Override
+    public void saveAll(List<Recomendation> recommendations) {
+        if (recommendations == null || recommendations.isEmpty()) return;
+        // Implementar lógica de creación si es necesaria.
+    }
 }
