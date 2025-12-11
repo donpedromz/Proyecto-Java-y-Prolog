@@ -10,6 +10,7 @@ import java.util.List;
  * @author juanp
  */
 public interface IDiseaseRepository extends IRepository<Disease> {
+    Disease saveDisease(Disease disease);
     List<Symptom> listSymptomsByDiseaseId(long diseaseId);
     List<Recomendation> listRecommendationsByDiseaseId(long diseaseId);
     Disease loadWithRelations(Disease disease);

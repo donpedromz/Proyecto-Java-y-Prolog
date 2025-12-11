@@ -8,6 +8,8 @@ import donpedromz.integracion_prolog.entities.Disease;
 import donpedromz.integracion_prolog.entities.Category;
 import donpedromz.integracion_prolog.entities.Recomendation;
 import donpedromz.integracion_prolog.repositories.interfaces.implementations.IDiseaseRepository;
+import donpedromz.integracion_prolog.repositories.interfaces.implementations.ISymptomRepository;
+import donpedromz.integracion_prolog.repositories.interfaces.implementations.IRecomendationRepository;
 import donpedromz.integracion_prolog.entities.Symptom;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,15 +21,66 @@ import donpedromz.integracion_prolog.shared.MySQLConnection;
 /**
  * 
  * @author juanp
+ * @author milomnz
  */
 public class DiseaseRepository implements IDiseaseRepository {
 
 	private final Connection connection;
+    private final ISymptomRepository symptomRepository;
+    private final IRecomendationRepository recommendationRepository;
 
 	public DiseaseRepository() {
 		this.connection = MySQLConnection.getInstance().getConnection();
+        this.symptomRepository = new SymptomRepository();
+        this.recommendationRepository = new RecomendationRepository();
 	}
 
+    @Override
+    public Disease saveDisease(Disease disease) {
+        if (disease == null) return null;
+        
+        try {
+            connection.setAutoCommit(false);
+            
+            // Insertamos la enfermedad y obtenemos el ID
+            long diseaseId = insertDisease(disease);
+            disease.setId((int) diseaseId); 
+
+            if (disease.getSymptoms() != null && !disease.getSymptoms().isEmpty()) {
+                symptomRepository.associateWithDisease(diseaseId, disease.getSymptoms());
+            }
+			
+            if (disease.getRecomendations() != null && !disease.getRecomendations().isEmpty()) {
+                recommendationRepository.associateWithDisease(diseaseId, disease.getRecomendations());
+            }
+
+            connection.commit();
+            return disease;
+        } catch (SQLException e) {
+            try { connection.rollback(); } catch (SQLException ignored) {}
+            throw new RuntimeException("Error al guardar enfermedad: " + e.getMessage(), e);
+        } finally {
+            try { connection.setAutoCommit(true); } catch (SQLException ignored) {}
+        }
+    }
+
+    private long insertDisease(Disease disease) throws SQLException {
+        String sql = "INSERT INTO disease (name, category_id) VALUES (?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, disease.getName());
+            ps.setInt(2, disease.getCategory().getId());
+            ps.executeUpdate();
+            
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
+            }
+        }
+        throw new SQLException("No se pudo obtener el ID para la nueva enfermedad.");
+    }
+        
+        
 	@Override
 	public List<Disease> getAll() {
 		String sql = "SELECT d.id, d.name, c.id as category_id, c.name as category_name " +
