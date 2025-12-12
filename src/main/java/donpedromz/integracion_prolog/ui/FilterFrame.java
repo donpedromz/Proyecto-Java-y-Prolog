@@ -6,6 +6,7 @@ package donpedromz.integracion_prolog.ui;
 
 import donpedromz.integracion_prolog.controllers.SpecialistController;
 import donpedromz.integracion_prolog.entities.Diagnostic;
+import donpedromz.integracion_prolog.entities.Disease;
 import donpedromz.integracion_prolog.entities.Recomendation;
 import donpedromz.integracion_prolog.entities.Symptom;
 import java.util.ArrayList;
@@ -138,12 +139,12 @@ public class FilterFrame extends javax.swing.JFrame {
 
         List<Diagnostic> toRender = filteredDiagnostics != null ? filteredDiagnostics : new ArrayList<>();
         for (Diagnostic d : toRender) {
-            List<donpedromz.integracion_prolog.entities.Disease> diseases = d.getDiseases();
+            List<Disease> diseases = d.getDiseases();
             if (diseases == null || diseases.isEmpty()) {
                 model.addRow(new Object[]{"", "", "", "", ""});
                 continue;
             }
-            for (donpedromz.integracion_prolog.entities.Disease disease : diseases) {
+            for (Disease disease : diseases) {
                 String sintomasEnfermedad = joinSymptoms(disease != null ? disease.getSymptoms() : null);
                 String recomendaciones = joinRecs(disease != null ? disease.getRecomendations() : null);
                 model.addRow(new Object[]{

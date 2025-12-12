@@ -5,6 +5,7 @@
 package donpedromz.integracion_prolog.ui;
 
 import donpedromz.integracion_prolog.controllers.SpecialistController;
+import donpedromz.integracion_prolog.entities.Disease;
 import donpedromz.integracion_prolog.entities.Diagnostic;
 import donpedromz.integracion_prolog.entities.Recomendation;
 import donpedromz.integracion_prolog.entities.Symptom;
@@ -148,7 +149,7 @@ public class ConsultPatientDiagnoseFrame extends javax.swing.JFrame {
         resetTable();
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         for (Diagnostic diagnostic : diagnostics) {
-            List<donpedromz.integracion_prolog.entities.Disease> diseases = diagnostic.getDiseases();
+            List<Disease> diseases = diagnostic.getDiseases();
             if (diseases == null || diseases.isEmpty()) {
                 model.addRow(new Object[]{
                     diagnostic.getId(),
@@ -161,7 +162,7 @@ public class ConsultPatientDiagnoseFrame extends javax.swing.JFrame {
                 continue;
             }
 
-            for (donpedromz.integracion_prolog.entities.Disease disease : diseases) {
+            for (Disease disease : diseases) {
                 String symptoms = joinSymptoms(disease != null ? disease.getSymptoms() : null);
                 String recs = joinRecs(disease != null ? disease.getRecomendations() : null);
                 model.addRow(new Object[]{

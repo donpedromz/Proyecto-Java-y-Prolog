@@ -138,7 +138,6 @@ public final class FormatUtils {
             if (cursor.isListNil()) {
                 return result;
             }
-            // Si no es lista bien formada, tomar su representación
             result.add(cursor.toString());
         } catch (Exception e) {
             // Si falla la conversión, intentamos obtenerlo como átomo simple

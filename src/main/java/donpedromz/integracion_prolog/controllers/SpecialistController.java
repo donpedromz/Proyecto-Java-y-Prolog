@@ -102,7 +102,6 @@ public class SpecialistController {
     }
 
     private void handleDiagnoseButtonClicked() {
-        this.entryFrame.dispose();
         this.diagnoseFrame = new SymptomSelectionFrame(this);
         displayFrame(diagnoseFrame);
     }
@@ -116,9 +115,6 @@ public class SpecialistController {
     }
 
     public void handleOpenCreateDisease() {
-        if (this.entryFrame != null) {
-            this.entryFrame.dispose();
-        }
         CreateDisease panel = new CreateDisease(this);
         this.createDiseaseFrame = new JFrame("Registrar enfermedad");
         this.createDiseaseFrame.setContentPane(panel);

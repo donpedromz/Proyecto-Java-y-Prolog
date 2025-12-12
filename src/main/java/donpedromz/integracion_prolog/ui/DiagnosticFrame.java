@@ -8,6 +8,7 @@ import donpedromz.integracion_prolog.controllers.SpecialistController;
 import donpedromz.integracion_prolog.entities.Diagnostic;
 import donpedromz.integracion_prolog.entities.Recomendation;
 import donpedromz.integracion_prolog.entities.Symptom;
+import donpedromz.integracion_prolog.entities.Disease;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -46,7 +47,7 @@ public class DiagnosticFrame extends javax.swing.JFrame {
         };
 
         for (Diagnostic d : diagnostics) {
-            List<donpedromz.integracion_prolog.entities.Disease> diseases = d.getDiseases();
+            List<Disease> diseases = d.getDiseases();
             if (diseases == null || diseases.isEmpty()) {
                 model.addRow(new Object[]{
                     "",
@@ -57,7 +58,7 @@ public class DiagnosticFrame extends javax.swing.JFrame {
                 continue;
             }
 
-            for (donpedromz.integracion_prolog.entities.Disease disease : diseases) {
+            for (Disease disease : diseases) {
                 String sintomasEnfermedad = joinSymptoms(disease != null ? disease.getSymptoms() : null);
                 String recomendaciones = joinRecs(disease != null ? disease.getRecomendations() : null);
                 model.addRow(new Object[]{

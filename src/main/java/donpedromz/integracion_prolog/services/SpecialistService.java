@@ -486,11 +486,11 @@ public class SpecialistService {
         return sb.toString();
     }
 
-    private String joinRecsCsv(List<donpedromz.integracion_prolog.entities.Recomendation> recs) {
+    private String joinRecsCsv(List<Recomendation> recs) {
         if (recs == null) return "";
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < recs.size(); i++) {
-            donpedromz.integracion_prolog.entities.Recomendation rec = recs.get(i);
+            Recomendation rec = recs.get(i);
             String value = rec != null ? rec.getDescription() : "";
             sb.append(value);
             if (i < recs.size() - 1) {
